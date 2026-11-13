@@ -267,3 +267,54 @@ dialog h2 { margin: 0 0 6px; font-size: 20px; }
 .kurve .baby-punkt { fill: var(--text); stroke: var(--karte); stroke-width: 1.5; }
 .legende i.lg-aussen { background: color-mix(in srgb, var(--wetter) 18%, transparent); }
 .legende i.lg-innen { background: color-mix(in srgb, var(--wetter) 35%, transparent); }
+
+/* Gesundheit & Erinnerungen */
+:root { --gesund: #d4607a; --gesund-hell: #fbe1e7; --erinn: #c99a2e; --erinn-hell: #f8ecd2; }
+@media (prefers-color-scheme: dark) { :root { --gesund: #ec8aa0; --gesund-hell: #47283a; --erinn: #e5bd5f; --erinn-hell: #3e3524; } }
+.leiste { grid-template-columns: repeat(6, 1fr); }
+.leiste button span { font-size: 10.5px; }
+.leiste button[data-v="gesundheit"].aktiv { color: var(--gesund); }
+.knopf.gesund { background: var(--gesund); }
+.knopf.erinn { background: var(--erinn); }
+.erinnerung { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; margin-top: 12px; border: 0; cursor: pointer; text-align: left;
+  background: var(--gesund-hell); color: var(--text); border-radius: 16px; padding: 12px 16px; font-weight: 600; font-size: 15px; }
+.erinnerung span { font-size: 22px; color: var(--gesund); }
+.liste .sym.v-sym { background: var(--grund); font-size: 13px; font-weight: 700; color: var(--leise); }
+.liste li.v-ok .sym.v-sym { background: var(--wetter-hell); color: var(--wetter); }
+.liste li.v-jetzt .sym.v-sym, .liste li.v-bald .sym.v-sym { background: var(--gesund-hell); color: var(--gesund); }
+.liste li.v-warn .sym.v-sym { background: color-mix(in srgb, var(--warn) 20%, var(--karte)); color: var(--warn); }
+.v-st { font-size: 13px; white-space: nowrap; }
+.v-ok .v-st { color: var(--wetter); } .v-jetzt .v-st, .v-bald .v-st { color: var(--gesund); font-weight: 600; } .v-warn .v-st { color: var(--warn); font-weight: 600; }
+.liste .sym.med { background: var(--gesund-hell); }
+.ok-text { color: var(--wetter); font-weight: 600; }
+.status.temp-ok { border-color: var(--wetter); }
+.status.temp-erhoeht { background: color-mix(in srgb, var(--sonne) 25%, var(--karte)); }
+.status.temp-fieber, .status.temp-warn { background: color-mix(in srgb, var(--warn) 22%, var(--karte)); }
+.status.temp-warn div:last-child { font-weight: 650; }
+.kurve .fieberzone { fill: color-mix(in srgb, var(--warn) 12%, transparent); }
+.notfall .nummer { display: flex; gap: 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--linie); color: var(--text); text-decoration: none; }
+.notfall .nummer b { min-width: 92px; font-size: 18px; color: var(--gesund); font-variant-numeric: tabular-nums; }
+.notfall .nummer span { font-size: 14px; color: var(--leise); }
+.notfall .link { margin-top: 10px; color: var(--gesund); }
+.gebiss { width: 100%; max-width: 340px; display: block; margin: 0 auto; }
+.gebiss .zahn rect { fill: var(--karte); stroke: var(--linie); stroke-width: 2; cursor: pointer; }
+.gebiss .zahn.da rect { fill: var(--gesund-hell); stroke: var(--gesund); }
+.gebiss .zahn text { font-size: 13px; fill: var(--gesund); pointer-events: none; font-weight: 700; }
+.gebiss .kiefer { font-size: 11px; fill: var(--leise); }
+.liste .sym.zahn-sym { background: var(--gesund-hell); }
+.liste .sym.ms { background: var(--grund); color: var(--leise); }
+.liste .sym.ms.da { background: var(--erinn-hell); }
+.liste img.mini { width: 44px; height: 44px; object-fit: cover; border-radius: 10px; flex: none; }
+details summary { cursor: pointer; padding: 10px 0 4px; font-size: 14px; }
+.foto-feld { margin: 12px 0; }
+.foto-feld img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 14px; display: block; margin-bottom: 8px; }
+.foto-knopf { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 14px; cursor: pointer; margin-right: 10px; }
+.foto-feld .link { color: var(--warn); }
+textarea { resize: vertical; }
+.tagebuch { padding-top: 4px; }
+.tb-monat { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--leise); margin: 18px 0 6px; }
+.tb-eintrag { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--linie); cursor: pointer; }
+.tb-sym { width: 36px; height: 36px; border-radius: 12px; background: var(--erinn-hell); display: grid; place-items: center; flex: none; font-size: 17px; }
+.tb-inhalt { flex: 1; min-width: 0; }
+.tb-inhalt p { margin: 4px 0 0; }
+.tb-foto { width: 100%; max-height: 300px; object-fit: cover; border-radius: 14px; margin-top: 8px; display: block; }

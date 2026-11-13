@@ -13,6 +13,12 @@ const S = {
   wetter: { ort: null, zimmer: 20, transport: 'wagen', cache: null },
   windeln: [],  // {id, art:'nass'|'voll'|'beides', start, farbe, notiz}
   wachstum: [], // {id, datum, gewicht (kg), groesse (cm), kopf (cm), notiz}
+  gesundheit: [], // {id, art:'fieber'|'medikament'|'symptom', start, wert, ort, mittel, dosis, notiz}
+  meds: {},      // Mittel → {abstand (Std)}
+  vorsorge: {},  // U1…U9 / Impfungen → {termin, erledigt, notiz, entfaellt}
+  zaehne: {},    // FDI-Nummer → Datum
+  meilensteine: {}, // Schlüssel → {datum, notiz, foto, eigen, name}
+  tagebuch: [],  // {id, datum, titel, text, foto}
   beikost: { ziel: 100, start: '', eigene: [] }, // Lebensmittel stehen in essen (art beikost, lebensmittel: [{n, r}])
 };
 function laden() {
@@ -264,7 +270,7 @@ function zeigeSchlaf() {
   const napsHeute = eintraege.filter(s => s.art === 'nap');
   const tagMin = napsHeute.reduce((a, s) => a + ((s.ende || Date.now()) - s.start) / MIN, 0);
 
-  el.innerHTML = status + vorh + `<div class="karte"><h2>Heute</h2>
+  el.innerHTML = (window.vorsorgeHinweis ? vorsorgeHinweis() : '') + status + vorh + `<div class="karte"><h2>Heute</h2>
     ${zeitleiste(heute, plan)}
     <div class="skala"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
     <p class="leise klein">${napsHeute.length} Schläfchen · ${dauer(tagMin)} Tagschlaf · gestrichelt = Vorschlag</p>
@@ -541,7 +547,13 @@ function zeigeVerlauf() {
 /* ---------- Ansicht: Profil ---------- */
 function zeigeProfil() {
   const p = S.profil;
-  $('#v-profil').innerHTML = `<div class="karte"><h2>Dein Baby</h2>
+  const reiter = `<div class="reiter" style="margin-top:12px">${[['profil', 'Profil'], ['wachstum', 'Wachstum'], ['meilensteine', 'Meilensteine'], ['tagebuch', 'Tagebuch']].map(([k, t]) => `<button class="${babyReiter === k ? 'an' : ''}" onclick="babyReiterSetzen('${k}')">${t}</button>`).join('')}</div>`;
+  if (babyReiter !== 'profil') {
+    $('#v-profil').innerHTML = reiter + ({ wachstum: zeigeWachstum, meilensteine: zeigeMeilensteine, tagebuch: zeigeTagebuch }[babyReiter])();
+    fotosEinsetzen($('#v-profil'));
+    return;
+  }
+  $('#v-profil').innerHTML = reiter + `<div class="karte"><h2>Dein Baby</h2>
     <form id="profil-form">
       <label class="feld">Name<input name="name" value="${esc(p.name)}" placeholder="z. B. Mia" autocomplete="off"></label>
       <div class="zeile2"><label class="feld">Geburtsdatum<input type="date" name="geburt" value="${esc(p.geburt)}" max="${tagKey(Date.now())}" required></label>
@@ -553,9 +565,8 @@ function zeigeProfil() {
       <button class="knopf breit">Speichern</button>
       <p class="leise klein" id="profil-ok"></p>
     </form></div>
-    ${zeigeWachstum()}
     <div class="karte"><h2>Datensicherung</h2>
-      <p class="leise klein">Alle Einträge liegen nur auf diesem Gerät, in diesem Browser. Sichere sie ab und zu als Datei.</p>
+      <p class="leise klein">Alle Einträge und Fotos liegen nur auf diesem Gerät, in diesem Browser. Sichere sie ab und zu als Datei, z. B. in iCloud Drive.</p>
       <div class="knoepfe"><button class="knopf rand" onclick="sichern()">⬇︎ Sichern</button><button class="knopf rand" onclick="$('#import').click()">⬆︎ Wiederherstellen</button></div>
       <input type="file" id="import" accept="application/json,.json" hidden onchange="wiederherstellen(this.files[0])">
       <div class="knoepfe" style="grid-template-columns:1fr"><button class="knopf gefahr" onclick="allesLoeschen()">Alle Daten löschen</button></div>
@@ -569,8 +580,9 @@ function zeigeProfil() {
     $('#profil-ok').textContent = 'Gespeichert ✓';
   };
 }
-function sichern() {
-  const blob = new Blob([JSON.stringify({ ...S, wetter: { ...S.wetter, cache: null } }, null, 1)], { type: 'application/json' });
+async function sichern() {
+  const fotos = await fotosFuerSicherung();
+  const blob = new Blob([JSON.stringify({ ...S, wetter: { ...S.wetter, cache: null }, fotos })], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `Schlafwolke Sicherung ${tagKey(Date.now())}.json`;
@@ -582,12 +594,16 @@ function wiederherstellen(datei) {
     const d = JSON.parse(t);
     if (!Array.isArray(d.schlaf) || !d.profil) throw new Error('Keine Schlafwolke-Sicherung');
     if (!confirm(`Sicherung mit ${d.schlaf.length} Schlaf- und ${(d.essen || []).length} Fütter-Einträgen laden? Die aktuellen Daten werden ersetzt.`)) return;
-    localStorage.setItem(SPEICHER, JSON.stringify(d)); laden(); alles(); alert('Wiederhergestellt ✓');
+    const fotos = d.fotos; delete d.fotos;
+    localStorage.setItem(SPEICHER, JSON.stringify(d)); laden();
+    return fotosAusSicherung(fotos).then(() => { rendern(); alert('Wiederhergestellt ✓'); });
   }).catch(e => alert('Datei konnte nicht gelesen werden: ' + e.message));
 }
 function allesLoeschen() {
   if (!confirm('Wirklich ALLE Einträge und das Profil löschen? Das lässt sich nicht rückgängig machen.')) return;
-  localStorage.removeItem(SPEICHER); location.reload();
+  localStorage.removeItem(SPEICHER);
+  try { indexedDB.deleteDatabase('schlafwolke-fotos'); } catch (e) {}
+  location.reload();
 }
 
 /* ---------- Rahmen ---------- */
@@ -605,9 +621,10 @@ function zeige(v) {
 }
 function rendern() {
   kopf();
-  ({ schlaf: zeigeSchlaf, essen: zeigeEssen, verlauf: zeigeVerlauf, wetter: () => window.zeigeWetter && zeigeWetter(), profil: zeigeProfil })[aktiv]();
+  ({ schlaf: zeigeSchlaf, essen: zeigeEssen, gesundheit: zeigeGesundheit, verlauf: zeigeVerlauf, wetter: () => window.zeigeWetter && zeigeWetter(), profil: zeigeProfil })[aktiv]();
 }
-function alles() { if (aktiv !== 'profil') rendern(); else kopf(); }
+// nach einem Dialog: Profil-Formular nicht überschreiben (ungespeicherte Eingaben)
+function alles() { if (aktiv !== 'profil' || babyReiter !== 'profil') rendern(); else kopf(); }
 
 document.querySelectorAll('.leiste button').forEach(b => b.onclick = () => zeige(b.dataset.v));
 laden();
@@ -617,7 +634,11 @@ setInterval(() => { if (!$('#dlg').open && (aktiv === 'schlaf' || aktiv === 'ess
 document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#dlg').open && aktiv !== 'profil') rendern(); });
 window.addEventListener('DOMContentLoaded', () => {
   let start = 'schlaf';
-  try { start = sessionStorage.getItem('ansicht') || 'schlaf'; essenReiter = sessionStorage.getItem('essenReiter') || 'milch'; } catch (e) {}
+  try {
+    start = sessionStorage.getItem('ansicht') || 'schlaf'; essenReiter = sessionStorage.getItem('essenReiter') || 'milch';
+    gesReiter = sessionStorage.getItem('gesReiter') || 'vorsorge'; babyReiter = sessionStorage.getItem('babyReiter') || 'profil';
+  } catch (e) {}
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
   zeige(start);
 });
 if ('serviceWorker' in navigator && window.isSecureContext) navigator.serviceWorker.register('sw.js').catch(() => {});
