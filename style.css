@@ -212,3 +212,39 @@ dialog h2 { margin: 0 0 6px; font-size: 20px; }
 .leer { text-align: center; padding: 26px 18px; }
 .leer .gross-ikon { font-size: 48px; }
 .fuss-hinweis { font-size: 12px; color: var(--leise); text-align: center; margin: 18px 8px; }
+
+/* Beikost */
+.bk-fortschritt { display: flex; align-items: center; gap: 18px; }
+.ring { width: 96px; height: 96px; flex: none; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 12; }
+.ring .spur { stroke: var(--essen-hell); }
+.ring .wert { stroke: var(--essen); stroke-linecap: round; transition: stroke-dashoffset .4s; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip {
+  border: 1.5px solid var(--linie); background: var(--karte); border-radius: 99px; padding: 6px 12px;
+  font-size: 14px; cursor: pointer; color: var(--text);
+}
+.chip.probiert { background: var(--essen-hell); border-color: transparent; }
+.chip.warn { background: color-mix(in srgb, var(--warn) 20%, var(--karte)); }
+.chip.neu { border-style: dashed; color: var(--essen); font-weight: 600; }
+.chip small { color: var(--leise); }
+.bk-wahl { max-height: 210px; overflow-y: auto; }
+.bk-gruppe { padding: 8px 0; border-bottom: 1px solid var(--linie); }
+.bk-gruppe:last-of-type { border-bottom: 0; }
+.bk-kopf { width: 100%; display: flex; justify-content: space-between; border: 0; background: none; padding: 4px 0; cursor: pointer; font-weight: 600; text-align: left; }
+.bk-balken { height: 6px; border-radius: 3px; background: var(--grund); overflow: hidden; margin-top: 4px; }
+.bk-balken i { display: block; height: 100%; background: var(--essen); border-radius: 3px; }
+.bk-plan { margin: 12px 0 0; padding-left: 22px; }
+.bk-plan li { margin: 4px 0; color: var(--leise); }
+.bk-plan li.fertig { color: var(--text); }
+.bk-plan li.fertig::after { content: " ✓"; color: var(--essen); }
+.bk-plan li.jetzt { color: var(--text); font-weight: 650; }
+.bk-allergene li { cursor: default; padding: 8px 2px; }
+.bk-allergene .e { width: 24px; text-align: center; color: var(--leise); }
+.bk-allergene li.ok .e { color: var(--essen); }
+.bk-allergene li.warn { color: var(--warn); }
+.bk-reakt { display: flex; gap: 4px; }
+.bk-reakt button { width: 36px; height: 36px; border-radius: 10px; border: 1.5px solid var(--linie); background: var(--grund); cursor: pointer; font-size: 16px; padding: 0; filter: grayscale(.7); opacity: .7; }
+.bk-reakt button.an { border-color: var(--essen); background: var(--essen-hell); filter: none; opacity: 1; }
+.bk-reakt button:last-child { filter: none; opacity: .6; }
+.knopf[disabled] { opacity: .4; }

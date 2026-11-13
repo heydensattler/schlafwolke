@@ -11,6 +11,7 @@ const S = {
   essen: [],    // {id, art:'stillen'|'flasche'|'beikost', seite, start, ende|null, ml, milch, notiz}
   aufwachen: {},// {'JJJJ-MM-TT': ms} – Aufwachzeit, falls kein Nachtschlaf eingetragen
   wetter: { ort: null, zimmer: 20, transport: 'wagen', cache: null },
+  beikost: { ziel: 100, start: '', eigene: [] }, // Lebensmittel stehen in essen (art beikost, lebensmittel: [{n, r}])
 };
 function laden() {
   try {
@@ -332,7 +333,8 @@ const ESSEN_SYM = { stillen: '🤱', flasche: '🍼', beikost: '🥣' };
 function essenText(e) {
   if (e.art === 'stillen') return 'Stillen' + (e.seite ? ' ' + { links: 'links', rechts: 'rechts', beide: 'beide Seiten' }[e.seite] : '');
   if (e.art === 'flasche') return 'Flasche' + (e.ml ? ` ${e.ml} ml` : '') + (e.milch ? ` · ${e.milch}` : '');
-  return 'Beikost' + (e.notiz ? ` · ${e.notiz}` : '');
+  const lm = (e.lebensmittel || []).map(x => x.n).join(', ');
+  return 'Beikost' + (lm ? ` · ${lm}` : '') + (e.notiz ? ` · ${e.notiz}` : '');
 }
 // Einträge, die höchstens 15 Min. auseinanderliegen (z. B. Seitenwechsel, Flasche nach dem Stillen), zählen als eine Mahlzeit
 function mahlzeiten(liste) {
@@ -344,8 +346,12 @@ function mahlzeiten(liste) {
   }
   return gruppen;
 }
+let essenReiter = 'milch';
+function essenReiterSetzen(r) { essenReiter = r; try { sessionStorage.setItem('essenReiter', r); } catch (e) {} zeigeEssen(); }
 function zeigeEssen() {
   const el = $('#v-essen');
+  const reiter = `<div class="reiter" style="margin-top:12px"><button class="${essenReiter === 'milch' ? 'an' : ''}" onclick="essenReiterSetzen('milch')">Mahlzeiten</button><button class="${essenReiter === 'beikost' ? 'an' : ''}" onclick="essenReiterSetzen('beikost')">Beikost-Plan</button></div>`;
+  if (essenReiter === 'beikost') { el.innerHTML = reiter + zeigeBeikost(); return; }
   const lauf = laufendesEssen();
   const alle = sortiert(S.essen);
   const fertig = alle.filter(e => e.ende || e.art !== 'stillen');
@@ -375,7 +381,7 @@ function zeigeEssen() {
       </div>
       <div class="knoepfe">
         <button class="knopf essen zweit" onclick="essenDialog(null,'flasche')">🍼 Flasche</button>
-        <button class="knopf essen zweit" onclick="essenDialog(null,'beikost')">🥣 Beikost</button>
+        <button class="knopf essen zweit" onclick="beikostDialog()">🥣 Beikost</button>
       </div></div>`;
   }
 
@@ -390,12 +396,12 @@ function zeigeEssen() {
   const mahlHeute = gruppen.filter(g => g.start >= heute).length;
   const abstand = abstaende.length ? abstaende.reduce((a, b) => a + b, 0) / abstaende.length : null;
 
-  const zeile = e => `<li onclick="essenDialog('${e.id}')"><div class="sym essen">${ESSEN_SYM[e.art]}</div>
+  const zeile = e => `<li onclick="${e.art === 'beikost' ? 'beikostDialog' : 'essenDialog'}('${e.id}')"><div class="sym essen">${ESSEN_SYM[e.art]}</div>
     <div class="haupt"><b>${esc(essenText(e))}</b><div class="leise klein">${WT[new Date(e.start).getDay()]} ${uhr(e.start)}${e.ende && e.art === 'stillen' ? ' – ' + uhr(e.ende) : ''}</div></div>
     <div class="neben">${e.art === 'stillen' ? (e.ende ? dauer((e.ende - e.start) / MIN) : 'läuft') : ''}</div></li>`;
   const juengste = alle.filter(e => e.start > Date.now() - 2 * TAG).reverse();
 
-  el.innerHTML = oben + `<div class="karte"><h2>Heute</h2>
+  el.innerHTML = reiter + oben + `<div class="karte"><h2>Heute</h2>
     <div class="kacheln">
       <div class="kachel"><div class="wert">${mahlHeute}</div><div class="bez">${mahlHeute === 1 ? "Mahlzeit" : "Mahlzeiten"}</div></div>
       <div class="kachel"><div class="wert">${abstand ? dauer(abstand, true) : '–'}</div><div class="bez">Ø Abstand (3 Tage)</div></div>
@@ -606,7 +612,7 @@ setInterval(() => { if (!$('#dlg').open && (aktiv === 'schlaf' || aktiv === 'ess
 document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#dlg').open && aktiv !== 'profil') rendern(); });
 window.addEventListener('DOMContentLoaded', () => {
   let start = 'schlaf';
-  try { start = sessionStorage.getItem('ansicht') || 'schlaf'; } catch (e) {}
+  try { start = sessionStorage.getItem('ansicht') || 'schlaf'; essenReiter = sessionStorage.getItem('essenReiter') || 'milch'; } catch (e) {}
   zeige(start);
 });
 if ('serviceWorker' in navigator && window.isSecureContext) navigator.serviceWorker.register('sw.js').catch(() => {});
