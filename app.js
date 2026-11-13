@@ -6,11 +6,13 @@ const MIN = 60000, STD = 3600000, TAG = 86400000;
 
 /* ---------- Daten ---------- */
 const S = {
-  profil: { name: '', geburt: '', aufwach: '07:00', spaetestens: '20:30' },
+  profil: { name: '', geburt: '', geschlecht: '', aufwach: '07:00', spaetestens: '20:30' },
   schlaf: [],   // {id, art:'nap'|'nacht', start, ende|null}
   essen: [],    // {id, art:'stillen'|'flasche'|'beikost', seite, start, ende|null, ml, milch, notiz}
   aufwachen: {},// {'JJJJ-MM-TT': ms} – Aufwachzeit, falls kein Nachtschlaf eingetragen
   wetter: { ort: null, zimmer: 20, transport: 'wagen', cache: null },
+  windeln: [],  // {id, art:'nass'|'voll'|'beides', start, farbe, notiz}
+  wachstum: [], // {id, datum, gewicht (kg), groesse (cm), kopf (cm), notiz}
   beikost: { ziel: 100, start: '', eigene: [] }, // Lebensmittel stehen in essen (art beikost, lebensmittel: [{n, r}])
 };
 function laden() {
@@ -350,8 +352,9 @@ let essenReiter = 'milch';
 function essenReiterSetzen(r) { essenReiter = r; try { sessionStorage.setItem('essenReiter', r); } catch (e) {} zeigeEssen(); }
 function zeigeEssen() {
   const el = $('#v-essen');
-  const reiter = `<div class="reiter" style="margin-top:12px"><button class="${essenReiter === 'milch' ? 'an' : ''}" onclick="essenReiterSetzen('milch')">Mahlzeiten</button><button class="${essenReiter === 'beikost' ? 'an' : ''}" onclick="essenReiterSetzen('beikost')">Beikost-Plan</button></div>`;
+  const reiter = `<div class="reiter" style="margin-top:12px"><button class="${essenReiter === 'milch' ? 'an' : ''}" onclick="essenReiterSetzen('milch')">Mahlzeiten</button><button class="${essenReiter === 'windeln' ? 'an' : ''}" onclick="essenReiterSetzen('windeln')">Windeln</button><button class="${essenReiter === 'beikost' ? 'an' : ''}" onclick="essenReiterSetzen('beikost')">Beikost</button></div>`;
   if (essenReiter === 'beikost') { el.innerHTML = reiter + zeigeBeikost(); return; }
+  if (essenReiter === 'windeln') { el.innerHTML = reiter + zeigeWindeln(); return; }
   const lauf = laufendesEssen();
   const alle = sortiert(S.essen);
   const fertig = alle.filter(e => e.ende || e.art !== 'stillen');
@@ -541,7 +544,8 @@ function zeigeProfil() {
   $('#v-profil').innerHTML = `<div class="karte"><h2>Dein Baby</h2>
     <form id="profil-form">
       <label class="feld">Name<input name="name" value="${esc(p.name)}" placeholder="z. B. Mia" autocomplete="off"></label>
-      <label class="feld">Geburtsdatum<input type="date" name="geburt" value="${esc(p.geburt)}" max="${tagKey(Date.now())}" required></label>
+      <div class="zeile2"><label class="feld">Geburtsdatum<input type="date" name="geburt" value="${esc(p.geburt)}" max="${tagKey(Date.now())}" required></label>
+        <label class="feld">Geschlecht <span class="klein">(für Kurven)</span><select name="geschlecht"><option value="">–</option><option value="w" ${p.geschlecht === 'w' ? 'selected' : ''}>Mädchen</option><option value="m" ${p.geschlecht === 'm' ? 'selected' : ''}>Junge</option></select></label></div>
       <div class="zeile2">
         <label class="feld">Übliche Aufwachzeit<input type="time" name="aufwach" value="${esc(p.aufwach)}"></label>
         <label class="feld">Spätestens ins Bett<input type="time" name="spaetestens" value="${esc(p.spaetestens)}"></label>
@@ -549,6 +553,7 @@ function zeigeProfil() {
       <button class="knopf breit">Speichern</button>
       <p class="leise klein" id="profil-ok"></p>
     </form></div>
+    ${zeigeWachstum()}
     <div class="karte"><h2>Datensicherung</h2>
       <p class="leise klein">Alle Einträge liegen nur auf diesem Gerät, in diesem Browser. Sichere sie ab und zu als Datei.</p>
       <div class="knoepfe"><button class="knopf rand" onclick="sichern()">⬇︎ Sichern</button><button class="knopf rand" onclick="$('#import').click()">⬆︎ Wiederherstellen</button></div>
@@ -559,8 +564,8 @@ function zeigeProfil() {
   $('#profil-form').onsubmit = ev => {
     ev.preventDefault();
     const f = ev.target;
-    Object.assign(S.profil, { name: f.name.value.trim(), geburt: f.geburt.value, aufwach: f.aufwach.value || '07:00', spaetestens: f.spaetestens.value || '20:30' });
-    speichern(); kopf();
+    Object.assign(S.profil, { name: f.name.value.trim(), geburt: f.geburt.value, geschlecht: f.geschlecht.value, aufwach: f.aufwach.value || '07:00', spaetestens: f.spaetestens.value || '20:30' });
+    speichern(); zeigeProfil();
     $('#profil-ok').textContent = 'Gespeichert ✓';
   };
 }

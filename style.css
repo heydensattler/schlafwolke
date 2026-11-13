@@ -248,3 +248,22 @@ dialog h2 { margin: 0 0 6px; font-size: 20px; }
 .bk-reakt button.an { border-color: var(--essen); background: var(--essen-hell); filter: none; opacity: 1; }
 .bk-reakt button:last-child { filter: none; opacity: .6; }
 .knopf[disabled] { opacity: .4; }
+
+/* Windeln & Wachstum */
+.knopf.windel { background: var(--wetter); }
+.knoepfe.drei .knopf { padding: 12px 6px; font-size: 15px; }
+.liste .sym.windel { background: var(--wetter-hell); font-size: 15px; }
+.liste .sym.wachs { background: var(--wetter-hell); }
+.saeule .teil.wnass { background: var(--wetter); }
+.saeule .teil.wvoll { background: #b08a5a; border-radius: 4px 4px 0 0; }
+.kurve { width: 100%; height: auto; display: block; }
+.kurve text { font-size: 10px; fill: var(--leise); }
+.kurve text.pz { font-size: 9px; }
+.kurve .gitter { stroke: var(--linie); stroke-width: 1; }
+.kurve .band-aussen { fill: color-mix(in srgb, var(--wetter) 12%, transparent); }
+.kurve .band-innen { fill: color-mix(in srgb, var(--wetter) 22%, transparent); }
+.kurve .median { fill: none; stroke: var(--wetter); stroke-width: 1.2; stroke-dasharray: 4 3; opacity: .8; }
+.kurve .baby-linie { fill: none; stroke: var(--text); stroke-width: 2; }
+.kurve .baby-punkt { fill: var(--text); stroke: var(--karte); stroke-width: 1.5; }
+.legende i.lg-aussen { background: color-mix(in srgb, var(--wetter) 18%, transparent); }
+.legende i.lg-innen { background: color-mix(in srgb, var(--wetter) 35%, transparent); }
