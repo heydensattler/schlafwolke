@@ -548,7 +548,7 @@ function zeigeVerlauf() {
 /* ---------- Ansicht: Profil ---------- */
 function zeigeProfil() {
   const p = S.profil;
-  const reiter = `<div class="reiter" style="margin-top:12px">${[['profil', 'Profil'], ['wachstum', 'Wachstum'], ['meilensteine', 'Meilensteine'], ['tagebuch', 'Tagebuch'], ['kosten', 'Kosten']].map(([k, t]) => `<button class="${babyReiter === k ? 'an' : ''}" onclick="babyReiterSetzen('${k}')">${t}</button>`).join('')}</div>`;
+  const reiter = `<div class="reiter fuenf" style="margin-top:12px">${[['profil', 'Profil'], ['wachstum', 'Wachstum'], ['meilensteine', 'Meilensteine'], ['tagebuch', 'Tagebuch'], ['kosten', 'Kosten']].map(([k, t]) => `<button class="${babyReiter === k ? 'an' : ''}" onclick="babyReiterSetzen('${k}')">${t}</button>`).join('')}</div>`;
   if (babyReiter !== 'profil') {
     $('#v-profil').innerHTML = reiter + ({ wachstum: zeigeWachstum, meilensteine: zeigeMeilensteine, tagebuch: zeigeTagebuch, kosten: zeigeKosten }[babyReiter])();
     fotosEinsetzen($('#v-profil'));

@@ -322,9 +322,10 @@ textarea { resize: vertical; }
 /* Kosten */
 :root { --kosten: #4f7fbf; --kosten-hell: #dfe9f7; }
 @media (prefers-color-scheme: dark) { :root { --kosten: #84aee6; --kosten-hell: #233552; } }
-.reiter { overflow-x: auto; scrollbar-width: none; }
-.reiter::-webkit-scrollbar { display: none; }
-.reiter button { flex: 1 0 auto; padding-left: 8px; padding-right: 8px; }
+/* Reiter brechen um statt seitlich abgeschnitten zu werden (5 Reiter unter „Baby“) */
+.reiter { flex-wrap: wrap; }
+.reiter button { flex: 1 1 auto; padding-left: 8px; padding-right: 8px; white-space: nowrap; }
+.reiter.fuenf button { flex: 1 1 30%; }
 .knopf.kosten { background: var(--kosten); }
 .knopf.kosten.zweit { background: var(--kosten-hell); color: var(--text); }
 .liste .sym.kosten { background: var(--kosten-hell); }

@@ -1,5 +1,5 @@
 /* Offline-Speicher für die App-Dateien (Wetter kommt immer frisch aus dem Netz) */
-const VERSION = 'schlafwolke-5';
+const VERSION = 'schlafwolke-6';
 const DATEIEN = ['./', 'index.html', 'style.css', 'app.js', 'wetter.js', 'beikost.js', 'who.js', 'pflege.js', 'gesundheit.js', 'erinnerungen.js', 'kosten.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-180.png', 'icons/icon-192.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(DATEIEN))); self.skipWaiting(); });
 self.addEventListener('activate', e => {
