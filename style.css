@@ -318,3 +318,30 @@ textarea { resize: vertical; }
 .tb-inhalt { flex: 1; min-width: 0; }
 .tb-inhalt p { margin: 4px 0 0; }
 .tb-foto { width: 100%; max-height: 300px; object-fit: cover; border-radius: 14px; margin-top: 8px; display: block; }
+
+/* Kosten */
+:root { --kosten: #4f7fbf; --kosten-hell: #dfe9f7; }
+@media (prefers-color-scheme: dark) { :root { --kosten: #84aee6; --kosten-hell: #233552; } }
+.reiter { overflow-x: auto; scrollbar-width: none; }
+.reiter::-webkit-scrollbar { display: none; }
+.reiter button { flex: 1 0 auto; padding-left: 8px; padding-right: 8px; }
+.knopf.kosten { background: var(--kosten); }
+.knopf.kosten.zweit { background: var(--kosten-hell); color: var(--text); }
+.liste .sym.kosten { background: var(--kosten-hell); }
+.kosten-liste li.monat { cursor: default; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--leise); padding: 14px 2px 4px; border-bottom: 0; }
+.kosten-liste .neben b { color: var(--text); }
+.kachel .wert.minus { color: var(--warn); }
+.topf { background: var(--grund); border-radius: 16px; padding: 14px; margin-top: 10px; cursor: pointer; }
+.topf:first-of-type { margin-top: 0; }
+.topf-kopf { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.topf-rest { text-align: right; flex: none; }
+.topf-rest b { display: block; font-size: 24px; color: var(--kosten); font-variant-numeric: tabular-nums; }
+.topf.ueber .topf-rest b { color: var(--warn); }
+.topf .bk-balken { margin-top: 10px; background: var(--karte); }
+.topf .bk-balken i { background: var(--kosten); }
+.topf.ueber .bk-balken i { background: var(--warn); }
+.topf-liste { list-style: none; padding: 0; margin: 8px 0 0; font-size: 14px; }
+.topf-liste li { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; color: var(--leise); }
+.kat-zeile { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 8px 0; cursor: pointer; font-size: 15px; }
+.kat-zeile .bk-balken { grid-column: 1 / -1; margin-top: 2px; }
+.kat-zeile .bk-balken i { background: var(--kosten); }
