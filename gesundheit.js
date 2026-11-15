@@ -94,7 +94,7 @@ function vorsorgeHinweis() { // kleine Erinnerung auf der Startseite
   if (!offen.length) return '';
   const us = offen.filter(x => x.typ === 'u').map(x => x.k), imp = offen.filter(x => x.typ === 'impf').length;
   const teile = [...us, ...(imp ? [imp === 1 ? '1 Impfung' : imp + ' Impfungen'] : [])];
-  return `<button class="erinnerung" onclick="gesReiter='vorsorge';zeige('gesundheit')">📅 ${teile.join(' und ')} ${teile.length > 1 || imp > 1 ? 'stehen' : 'steht'} an – Termin vereinbart? <span>›</span></button>`;
+  return `<button class="erinnerung" onclick="zeige('gesundheit/vorsorge')">📅&nbsp; ${teile.length > 1 ? teile.slice(0, -1).join(', ') + ' und ' + teile.at(-1) : teile[0]} ${teile.length > 1 || imp > 1 ? 'stehen' : 'steht'} an – Termin vereinbart? <span>›</span></button>`;
 }
 function zeigeVorsorge() {
   if (!geburtMs()) return `<div class="karte leer"><p>Trag unter „Baby“ den Geburtstag ein, dann berechnet die App alle Termine.</p></div>`;

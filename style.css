@@ -1,36 +1,47 @@
 :root {
-  --grund: #f7f3ec;
+  /* Morgendunst statt Creme: kühler, heller Grund, Tinte in tiefem Indigo */
+  --grund: #edf0f5;
   --karte: #ffffff;
-  --text: #24283b;
-  --leise: #6d7088;
-  --linie: #e6e0d6;
-  --schlaf: #6f67c9;
-  --schlaf-hell: #e4e1fa;
-  --nacht: #2f3a6b;
-  --essen: #e0875f;
-  --essen-hell: #fbe4d8;
-  --wetter: #3a9c8c;
-  --wetter-hell: #d7f0ea;
+  --text: #1c2140;
+  --leise: #5d6483;
+  --linie: #dbe0ea;
+  --schlaf: #6650b8;
+  --schlaf-hell: #e6e0f6;
+  --nacht: #283062;
+  --essen: #e3a13a;
+  --essen-hell: #fbecd2;
+  --essen-text: #3a2806;
+  --wetter: #3e8e7e;
+  --wetter-hell: #d8eee7;
+  --windel-voll: #a7835a;
   --sonne: #f2b544;
-  --warn: #c8573e;
-  --schatten: 0 1px 2px rgba(36, 40, 59, .06), 0 4px 16px rgba(36, 40, 59, .05);
+  --warn: #c0453a;
+  --leise-hell: #e3e7ef;
+  --schatten: 0 1px 2px rgba(28, 33, 64, .05), 0 6px 20px rgba(28, 33, 64, .06);
+  --himmel-tag: linear-gradient(172deg, #b9d3f1 0%, #dce8f7 55%, #eef3fa 100%);
+  --himmel-nacht: linear-gradient(172deg, #1d2352 0%, #352c6e 70%, #4a3a86 100%);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --grund: #141a2e;
-    --karte: #1e2540;
-    --text: #eceaf4;
-    --leise: #9da2c0;
-    --linie: #2f3858;
-    --schlaf: #9d95f0;
-    --schlaf-hell: #2c2c5a;
-    --nacht: #3d4c9e;
-    --essen: #f0a07c;
-    --essen-hell: #45302e;
-    --wetter: #62c4b2;
-    --wetter-hell: #1f3d3c;
+    --grund: #11142a;
+    --karte: #1a1f3d;
+    --text: #e9ebf7;
+    --leise: #9aa0c3;
+    --linie: #2a3159;
+    --schlaf: #a191f2;
+    --schlaf-hell: #2b2752;
+    --nacht: #3a4590;
+    --essen: #f0b65a;
+    --essen-hell: #3a2f1c;
+    --essen-text: #2a1d04;
+    --wetter: #62c0ad;
+    --wetter-hell: #1c3a37;
+    --windel-voll: #c9a377;
+    --leise-hell: #262c50;
     --schatten: none;
+    --himmel-tag: linear-gradient(172deg, #2d4377 0%, #223058 60%, #1a1f3d 100%);
+    --himmel-nacht: linear-gradient(172deg, #0f1230 0%, #241d52 70%, #33276a 100%);
     color-scheme: dark;
   }
 }
@@ -255,7 +266,7 @@ dialog h2 { margin: 0 0 6px; font-size: 20px; }
 .liste .sym.windel { background: var(--wetter-hell); font-size: 15px; }
 .liste .sym.wachs { background: var(--wetter-hell); }
 .saeule .teil.wnass { background: var(--wetter); }
-.saeule .teil.wvoll { background: #b08a5a; border-radius: 4px 4px 0 0; }
+.saeule .teil.wvoll { background: var(--windel-voll); border-radius: 4px 4px 0 0; }
 .kurve { width: 100%; height: auto; display: block; }
 .kurve text { font-size: 10px; fill: var(--leise); }
 .kurve text.pz { font-size: 9px; }
@@ -346,3 +357,152 @@ textarea { resize: vertical; }
 .kat-zeile { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 8px 0; cursor: pointer; font-size: 15px; }
 .kat-zeile .bk-balken { grid-column: 1 / -1; margin-top: 2px; }
 .kat-zeile .bk-balken i { background: var(--kosten); }
+
+
+/* ================= Neues Design (15.11.2026) ================= */
+/* Überschriften in normaler Schreibweise statt Versalien */
+.karte h2, .schnell h2 { font-size: 17px; text-transform: none; letter-spacing: 0; color: var(--text); font-weight: 700; margin: 0 0 12px; }
+.karte h3 { font-size: 15px; color: var(--leise); font-weight: 650; }
+.karte { border: 0; border-radius: 18px; }
+.kopf { padding-bottom: 6px; }
+.marke { font-size: 15px; color: var(--leise); font-weight: 650; }
+.seiten-titel { font-size: 30px; line-height: 1.1; font-weight: 800; letter-spacing: -.025em; margin: 10px 0 6px; }
+.seiten-unter { color: var(--leise); margin: 0 0 14px; }
+.knopf { border-radius: 14px; }
+.knopf.essen { color: var(--essen-text); }
+.knopf.essen.zweit { color: var(--text); }
+.knopf.klein { min-height: 40px; padding: 8px 12px; font-size: 14px; }
+.knopf.hell { background: rgba(255,255,255,.92); color: var(--nacht); }
+.link { color: var(--schlaf); }
+
+/* Leiste unten: fünf Bereiche */
+.leiste { grid-template-columns: repeat(5, 1fr); border-top: 0; box-shadow: 0 -1px 0 var(--linie); }
+.leiste button span { font-size: 11px; }
+.leiste button.aktiv { color: var(--text); }
+.leiste button.aktiv svg { stroke: var(--schlaf); stroke-width: 2.2; }
+
+/* Heute */
+.heute-kopf { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.wetter-chip { border: 0; background: var(--karte); border-radius: 99px; padding: 7px 12px; font-weight: 700; cursor: pointer; display: flex; gap: 6px; align-items: baseline; box-shadow: var(--schatten); white-space: nowrap; margin-bottom: 8px; }
+.wetter-chip span { font-weight: 500; color: var(--leise); font-size: 13px; }
+.himmel { border-radius: 28px; padding: 20px 18px 18px; margin: 8px 0 14px; position: relative; overflow: hidden; }
+.himmel.tag { background: var(--himmel-tag); }
+.himmel.nacht { background: var(--himmel-nacht); color: #f1efff; }
+.himmel.nacht::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .7;
+  background-image: radial-gradient(1.5px 1.5px at 18% 22%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 72% 14%, #fff 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 86% 38%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 40% 10%, #fff 50%, transparent 51%), radial-gradient(1.3px 1.3px at 60% 30%, #fff 50%, transparent 51%); }
+.himmel > * { position: relative; }
+.himmel-zeile { margin: 0; font-size: 17px; font-weight: 650; }
+.himmel-uhr { font-size: 64px; font-weight: 800; letter-spacing: -.04em; line-height: 1; margin: 6px 0 4px; font-variant-numeric: tabular-nums; }
+.himmel-info { margin: 0 0 14px; font-size: 15px; opacity: .85; min-height: 1.4em; }
+.himmel.nacht .link { color: #d9d3ff; }
+.himmel-band { margin: 4px 0 16px; }
+.himmel-band .zeitleiste { background: rgba(255,255,255,.45); border: 0; height: 30px; }
+.himmel.nacht .himmel-band .zeitleiste { background: rgba(255,255,255,.12); }
+.himmel.nacht .zeitleiste .blk { background: #b9adff; }
+.himmel.nacht .zeitleiste .blk.nacht { background: #fff; opacity: .85; }
+.himmel.nacht .skala { color: #cfc9f3; }
+.himmel-band.flach .zeitleiste { background: var(--karte); }
+.himmel .knoepfe { margin-top: 0; }
+.himmel.tag .knopf.zweit { background: rgba(255,255,255,.75); }
+
+.schnell { margin: 4px 0 18px; }
+.schnell-raster { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.schnell-knopf { border: 0; border-radius: 16px; min-height: 72px; padding: 10px 6px; cursor: pointer; font-weight: 650; font-size: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: var(--karte); color: var(--text); box-shadow: var(--schatten); }
+.schnell-knopf span { font-size: 22px; line-height: 1; }
+.schnell-knopf.essen { background: var(--essen-hell); box-shadow: none; }
+.schnell-knopf.essen.vorschlag { background: var(--essen); color: var(--essen-text); }
+.schnell-knopf.windel { background: var(--wetter-hell); box-shadow: none; }
+.schnell-knopf.mehr { background: transparent; box-shadow: inset 0 0 0 1.5px var(--linie); flex-direction: row; min-height: 52px; }
+.schnell-knopf.mehr span { font-size: 18px; }
+.schnell-knopf.zwei { grid-column: span 2; }
+.schnell-knopf.drei { grid-column: span 3; }
+.schnell-knopf:active, .knopf:active, .hub-zeile:active { transform: scale(.98); }
+.stillen-laeuft { grid-column: span 3; display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; background: var(--essen); color: var(--essen-text); border-radius: 16px; padding: 12px 14px; }
+.stillen-laeuft span { font-weight: 650; }
+.stillen-laeuft b { font-size: 26px; font-variant-numeric: tabular-nums; text-align: right; }
+.stillen-laeuft .knopf { background: rgba(255,255,255,.7); color: var(--essen-text); }
+.stillen-laeuft .knopf.essen { background: var(--essen-text); color: #fff; }
+.schnell-info { color: var(--leise); font-size: 14px; margin: 10px 2px 0; }
+
+.erinnerung { margin: 0 0 14px; }
+
+.tagesbuch { margin-top: 8px; }
+.tag-nav { display: flex; align-items: center; justify-content: space-between; }
+.tag-nav h2 { margin: 0; font-size: 20px; }
+.pfeil { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--karte); font-size: 22px; cursor: pointer; box-shadow: var(--schatten); }
+.pfeil[disabled] { opacity: .3; cursor: default; }
+.tag-zahlen { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 14px 0 6px; }
+.tag-zahlen div { text-align: center; }
+.tag-zahlen dt { font-size: 12px; color: var(--leise); }
+.tag-zahlen dd { margin: 0; font-size: 20px; font-weight: 750; font-variant-numeric: tabular-nums; order: -1; }
+.tag-zahlen div { display: flex; flex-direction: column; }
+.eintraege { list-style: none; margin: 8px 0 12px; padding: 0; position: relative; }
+.eintraege::before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--linie); border-radius: 1px; }
+.eintraege li { display: grid; grid-template-columns: 14px 48px 1fr auto; gap: 10px; align-items: center; padding: 10px 2px; cursor: pointer; position: relative; }
+.eintraege .punkt { width: 14px; height: 14px; border-radius: 50%; background: var(--farbe); box-shadow: 0 0 0 3px var(--grund); }
+.eintraege time { color: var(--leise); font-size: 13px; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.eintraege .was { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.eintraege .neben { color: var(--leise); font-size: 14px; font-variant-numeric: tabular-nums; }
+.eintraege .leer-zeile { display: block; color: var(--leise); padding-left: 26px; cursor: default; }
+
+.willkommen { text-align: center; padding: 40px 8px; }
+.willkommen-wolke { font-size: 64px; }
+.willkommen p { color: var(--leise); }
+
+/* Übersichtsseiten */
+.hub { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.hub-zeile { display: grid; grid-template-columns: 48px 1fr 16px; gap: 14px; align-items: center; width: 100%; text-align: left; border: 0; cursor: pointer;
+  background: var(--karte); border-radius: 18px; padding: 12px 14px; box-shadow: var(--schatten); color: var(--text); }
+.hub-sym { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; background: var(--farbe); }
+.hub-text b { display: block; font-size: 17px; }
+.hub-text small { display: block; color: var(--leise); font-size: 14px; margin-top: 2px; }
+.hub-pfeil { color: var(--leise); font-size: 24px; }
+.hub-trenner { font-size: 15px; color: var(--leise); margin: 18px 4px 2px; font-weight: 650; }
+.unterkopf .zurueck { border: 0; background: none; color: var(--schlaf); font-weight: 650; padding: 8px 0 0; cursor: pointer; font-size: 16px; }
+
+/* Wahl-Dialog „Anderes eintragen“ */
+.wahl-raster { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.wahl-knopf { border: 0; border-radius: 14px; background: var(--grund); padding: 14px 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; text-align: left; }
+.wahl-knopf span { font-size: 22px; }
+
+/* Meldung mit Rückgängig */
+#meldung { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  background: var(--text); color: var(--grund); border-radius: 14px; padding: 12px 14px 12px 16px; display: flex; gap: 14px; align-items: center;
+  width: max-content; max-width: calc(100% - 32px); z-index: 20; transition: opacity .2s, transform .2s; font-size: 15px; }
+#meldung.an { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+#meldung button { border: 0; background: none; color: var(--sonne); font-weight: 700; cursor: pointer; padding: 4px; }
+@media (prefers-reduced-motion: reduce) { #meldung { transition: none; } .schnell-knopf:active, .knopf:active, .hub-zeile:active { transform: none; } }
+:focus-visible { outline: 3px solid var(--schlaf); outline-offset: 2px; }
+
+/* Schwangerschaft */
+.bauch { background: linear-gradient(165deg, #f9e1c4 0%, #f5ead9 60%, #f3eef0 100%); border-radius: 28px; padding: 20px 18px; margin: 8px 0 14px;
+  display: grid; grid-template-columns: 110px 1fr; gap: 6px 16px; align-items: center; color: #2b2340; }
+@media (prefers-color-scheme: dark) { .bauch { background: linear-gradient(165deg, #4a3423 0%, #2e2638 70%, #231f3a 100%); color: #f5ecdf; } }
+.bauch-ring { position: relative; width: 110px; height: 110px; }
+.bauch-ring svg { width: 110px; height: 110px; transform: rotate(-90deg); }
+.bauch-ring circle { fill: none; stroke-width: 7; }
+.bauch-ring .spur { stroke: rgba(255,255,255,.6); }
+.bauch-ring .wert { stroke: var(--essen); stroke-linecap: round; }
+.bauch-frucht { position: absolute; inset: 0; display: grid; place-items: center; font-size: 46px; }
+.bauch-ssw { margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.bauch-gross { margin: 6px 0 2px; font-size: 18px; font-weight: 650; line-height: 1.2; }
+.bauch-klein { margin: 0; font-size: 13px; opacity: .75; }
+.bauch-entwicklung { grid-column: 1 / -1; margin: 10px 0 0; font-size: 15px; line-height: 1.45; }
+.bauch-rest { grid-column: 1 / -1; margin: 6px 0 0; font-size: 13px; opacity: .75; }
+.stillen-laeuft { margin-bottom: 12px; }
+.todo { list-style: none; padding: 0; margin: 0; }
+.todo li { border-bottom: 1px solid var(--linie); }
+.todo li:last-child { border-bottom: 0; }
+.todo label { display: flex; gap: 12px; padding: 10px 2px; cursor: pointer; align-items: flex-start; }
+.todo input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--schlaf); flex: none; }
+.todo b { display: block; }
+.todo small { display: block; color: var(--leise); font-size: 13px; margin-top: 2px; }
+.todo li.erl b { text-decoration: line-through; color: var(--leise); }
+.wochen { list-style: none; padding: 0; margin: 0; font-size: 14px; }
+.wochen li { display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; padding: 6px 4px; border-bottom: 1px solid var(--linie); }
+.wochen li span:first-child { color: var(--leise); font-variant-numeric: tabular-nums; }
+.wochen li span:last-child { color: var(--leise); font-variant-numeric: tabular-nums; }
+.wochen li.jetzt { background: var(--essen-hell); border-radius: 10px; font-weight: 650; }
+.tb-monat { text-transform: none; letter-spacing: 0; font-size: 16px; color: var(--text); font-weight: 700; }

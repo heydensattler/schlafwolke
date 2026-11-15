@@ -20,6 +20,7 @@ const S = {
   meilensteine: {}, // Schlüssel → {datum, notiz, foto, eigen, name}
   tagebuch: [],  // {id, datum, titel, text, foto}
   kosten: { personen: [{ id: 'mama', name: 'Mama' }, { id: 'papa', name: 'Papa' }], toepfe: [], ausgaben: [] },
+  schwanger: {}, // {et, bewegungen, wehen, gewicht, vorsorge, termine, todos}
   beikost: { ziel: 100, start: '', eigene: [] }, // Lebensmittel stehen in essen (art beikost, lebensmittel: [{n, r}])
 };
 function laden() {
